@@ -1,12 +1,11 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-#![allow(unused_variables)]
+// #![allow(dead_code)]
+// #![allow(unused_imports)]
+// #![allow(unused_variables)]
 
-#[macro_use]
-extern crate derive_builder;
+// #[macro_use]
+// extern crate derive_builder;
 
-use std::borrow::BorrowMut;
-use std::cell::{Cell, Ref, RefCell};
+use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
 // #[derive(Builder)]
@@ -22,7 +21,7 @@ impl PersonagemBuilder {
     fn build() -> Result<Personagem, String> {
         Ok(Personagem {
             state: RefCell::new(Rc::new(EstadoDoPersonagem::Small)),
-            previous_state: RefCell::new(Rc::new(EstadoDoPersonagem::Dead))
+            previous_state: RefCell::new(Rc::new(EstadoDoPersonagem::Dead)),
         })
     }
 }
@@ -199,6 +198,5 @@ fn main() {
         println!("{:?}", mario.state.borrow());
         println!("----------------------")
     }
-
 }
 
