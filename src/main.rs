@@ -134,7 +134,7 @@ fn main() {
         let mario = PersonagemBuilder::build().unwrap();
         println!("{:?}", mario.state.borrow());
         mario.hit();
-        println!("{:?}", mario.state.borrow());
+        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
@@ -142,7 +142,7 @@ fn main() {
         let mario = PersonagemBuilder::build().unwrap();
         println!("{:?}", mario.state.borrow());
         mario.mushroom();
-        println!("{:?}", mario.state.borrow());
+        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
@@ -151,7 +151,7 @@ fn main() {
         mario.set_state(EstadoDoPersonagem::Large);
         println!("{:?}", mario.state.borrow());
         mario.hit();
-        println!("{:?}", mario.state.borrow());
+        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
@@ -160,7 +160,7 @@ fn main() {
         mario.set_state(EstadoDoPersonagem::Large);
         println!("{:?}", mario.state.borrow());
         mario.mushroom();
-        println!("{:?}", mario.state.borrow());
+        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
@@ -168,7 +168,7 @@ fn main() {
         let mario = PersonagemBuilder::build().unwrap();
         println!("{:?}", mario.state.borrow());
         mario.star();
-        println!("{:?}", mario.state.borrow());
+        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
@@ -177,7 +177,7 @@ fn main() {
         mario.set_state(EstadoDoPersonagem::Large);
         println!("{:?}", mario.state.borrow());
         mario.star();
-        println!("{:?}", mario.state.borrow());
+        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 }

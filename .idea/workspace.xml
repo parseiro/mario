@@ -21,9 +21,8 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4a35941-8558-4f58-a82c-601bcdbd086d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+    <list default="true" id="b4a35941-8558-4f58-a82c-601bcdbd086d" name="Default Changelist" comment="Cleanup">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,11 +55,6 @@
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="run --package mario --bin mario" />
@@ -87,7 +81,7 @@
       <option name="presentableId" value="Default" />
       <updated>1601381697116</updated>
       <workItem from="1601381699354" duration="8474000" />
-      <workItem from="1601396314925" duration="23307000" />
+      <workItem from="1601396314925" duration="24002000" />
     </task>
     <task id="LOCAL-00001" summary="Version with states as enums">
       <created>1601394048210</created>
@@ -96,7 +90,28 @@
       <option name="project" value="LOCAL" />
       <updated>1601394048210</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Working">
+      <created>1601422187337</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1601422187337</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Cleanup">
+      <created>1601422338622</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1601422338622</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Cleanup">
+      <created>1601422381504</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1601422381504</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,33 +131,35 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Version with states as enums" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version with states as enums" />
+    <MESSAGE value="Working" />
+    <MESSAGE value="Cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleanup" />
   </component>
   <component name="WindowStateProjectService">
     <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1601421290712">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1601421290712" />
-    <state width="1493" height="247" key="GridCell.Tab.0.bottom" timestamp="1601422159188">
+    <state width="1493" height="247" key="GridCell.Tab.0.bottom" timestamp="1601422876668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1601422159188" />
-    <state width="1493" height="247" key="GridCell.Tab.0.center" timestamp="1601422159188">
+    <state width="1493" height="247" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
+    <state width="1493" height="247" key="GridCell.Tab.0.center" timestamp="1601422876668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1601422159188" />
-    <state width="1493" height="247" key="GridCell.Tab.0.left" timestamp="1601422159187">
+    <state width="1493" height="247" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
+    <state width="1493" height="247" key="GridCell.Tab.0.left" timestamp="1601422876668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1601422159187" />
-    <state width="1493" height="247" key="GridCell.Tab.0.right" timestamp="1601422159188">
+    <state width="1493" height="247" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
+    <state width="1493" height="247" key="GridCell.Tab.0.right" timestamp="1601422876668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1601422159188" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1601394048577">
+    <state width="1493" height="247" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1601422805378">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1601394048577" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1601422805378" />
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601382362809">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
