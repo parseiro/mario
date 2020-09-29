@@ -2,15 +2,10 @@
 // #![allow(unused_imports)]
 // #![allow(unused_variables)]
 
-// #[macro_use]
-// extern crate derive_builder;
-
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
-// #[derive(Builder)]
 struct Personagem {
-    // name: String,
     state: RefCell<Rc<EstadoDoPersonagem>>,
     previous_state: RefCell<Rc<EstadoDoPersonagem>>,
 }
@@ -133,19 +128,6 @@ impl EstadoDoPersonagemTrait for EstadoDoPersonagem {
         }
     }
 }
-
-/*impl EstadoDoPersonagemTrait for LargeState {
-    fn hit(&self) -> EstadoDoPersonagem {
-
-    }
-
-    fn mushroom(&self) -> EstadoDoPersonagem {
-        println!("already large");
-
-        // keeps in the same state
-        EstadoDoPersonagem::Large
-    }
-}*/
 
 fn main() {
     {
