@@ -1,6 +1,24 @@
 // #![allow(dead_code)]
 // #![allow(unused_imports)]
 // #![allow(unused_variables)]
+#![warn(anonymous_parameters)]
+#![warn(box_pointers)]
+//#![warn(missing_docs)]
+#![warn(trivial_casts, trivial_numeric_casts)]
+#![warn(unused_results)]
+#![warn(unused_qualifications)]
+#![warn(variant_size_differences)]
+#![warn(clippy::cast_possible_truncation,clippy::cast_possible_wrap,
+clippy::cast_precision_loss,clippy::cast_sign_loss,clippy::integer_arithmetic)]
+#![warn(clippy::fallible_impl_from)]
+#![warn(clippy::filter_map,clippy::filter_map_next)]
+#![warn(clippy::if_not_else,clippy::nonminimal_bool,clippy::single_match_else)]
+#![warn(clippy::int_plus_one)]
+#![warn(clippy::similar_names)]
+#![warn(clippy::mutex_integer)]
+//#![warn(clippy::print_stdout,clippy::use_debug)]
+#![warn(clippy::unwrap_used,clippy::map_unwrap_or)]
+//#![warn(clippy::unwrap_in_result)]
 
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
@@ -28,7 +46,7 @@ impl Player {
     {
         let old_rc: Rc<PlayerState> =
             self.state.replace(Rc::new(new_state));
-        self.previous_state.replace(old_rc);
+        let _ = self.previous_state.replace(old_rc);
     }
 
     fn extract_rc(&self) -> Rc<PlayerState> {
@@ -128,7 +146,7 @@ impl PlayerStateTrait for PlayerState {
 
 fn main() {
     {
-        let mario = PlayerBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().expect("Error creating a player");
         println!("{:?}", mario.state.borrow());
         mario.hit_player();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
@@ -136,7 +154,7 @@ fn main() {
     }
 
     {
-        let mario = PlayerBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().expect("Error creating a player");
         println!("{:?}", mario.state.borrow());
         mario.mushroom_player();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
@@ -144,7 +162,7 @@ fn main() {
     }
 
     {
-        let mario = PlayerBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().expect("Error creating a player");
         mario.set_state(PlayerState::Large);
         println!("{:?}", mario.state.borrow());
         mario.hit_player();
@@ -153,7 +171,7 @@ fn main() {
     }
 
     {
-        let mario = PlayerBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().expect("Error creating a player");
         mario.set_state(PlayerState::Large);
         println!("{:?}", mario.state.borrow());
         mario.mushroom_player();
@@ -162,7 +180,7 @@ fn main() {
     }
 
     {
-        let mario = PlayerBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().expect("Error creating a player");
         println!("{:?}", mario.state.borrow());
         mario.star();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
@@ -170,7 +188,7 @@ fn main() {
     }
 
     {
-        let mario = PlayerBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().expect("Error creating a player");
         mario.set_state(PlayerState::Large);
         println!("{:?}", mario.state.borrow());
         mario.star();

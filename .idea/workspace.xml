@@ -21,7 +21,11 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4a35941-8558-4f58-a82c-601bcdbd086d" name="Default Changelist" comment="Print old state" />
+    <list default="true" id="b4a35941-8558-4f58-a82c-601bcdbd086d" name="Default Changelist" comment="Better translation">
+      <change afterPath="$PROJECT_DIR$/clippy.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,6 +69,11 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -80,7 +89,8 @@
       <updated>1601381697116</updated>
       <workItem from="1601381699354" duration="8474000" />
       <workItem from="1601396314925" duration="24002000" />
-      <workItem from="1601423234205" duration="711000" />
+      <workItem from="1601423234205" duration="1628000" />
+      <workItem from="1601433332456" duration="2276000" />
     </task>
     <task id="LOCAL-00001" summary="Version with states as enums">
       <created>1601394048210</created>
@@ -117,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1601423327622</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Better translation">
+      <created>1601427755101</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1601427755101</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,33 +157,34 @@
     <MESSAGE value="Working" />
     <MESSAGE value="Cleanup" />
     <MESSAGE value="Print old state" />
-    <option name="LAST_COMMIT_MESSAGE" value="Print old state" />
+    <MESSAGE value="Better translation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Better translation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser" timestamp="1601421290712">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="574" y="128" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1601421290712" />
-    <state width="1493" height="247" key="GridCell.Tab.0.bottom" timestamp="1601422876668">
+    <state width="1493" height="247" key="GridCell.Tab.0.bottom" timestamp="1601435630730">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
-    <state width="1493" height="247" key="GridCell.Tab.0.center" timestamp="1601422876668">
+    <state width="1493" height="247" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1601435630730" />
+    <state width="1493" height="247" key="GridCell.Tab.0.center" timestamp="1601435630729">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
-    <state width="1493" height="247" key="GridCell.Tab.0.left" timestamp="1601422876668">
+    <state width="1493" height="247" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1601435630729" />
+    <state width="1493" height="247" key="GridCell.Tab.0.left" timestamp="1601435630729">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
-    <state width="1493" height="247" key="GridCell.Tab.0.right" timestamp="1601422876668">
+    <state width="1493" height="247" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1601435630729" />
+    <state width="1493" height="247" key="GridCell.Tab.0.right" timestamp="1601435630730">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="247" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1601422876668" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1601423351020">
+    <state width="1493" height="247" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1601435630730" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1601427758053">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1601423351020" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1601427758053" />
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601382362809">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -175,9 +193,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="570" y="318" key="git4idea.remote.GitConfigureRemotesDialog/0.0.1536.824@0.0.1536.824" timestamp="1601382350529" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1601418346585">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1601435008092">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1601418346585" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1601435008092" />
   </component>
 </project>
