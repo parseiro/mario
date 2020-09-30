@@ -5,90 +5,87 @@
 use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
-struct Personagem {
-    state: RefCell<Rc<EstadoDoPersonagem>>,
-    previous_state: RefCell<Rc<EstadoDoPersonagem>>,
+struct Player {
+    state: RefCell<Rc<PlayerState>>,
+    previous_state: RefCell<Rc<PlayerState>>,
 }
 
-struct PersonagemBuilder {}
+struct PlayerBuilder {}
 
-impl PersonagemBuilder {
-    fn build() -> Result<Personagem, String> {
-        Ok(Personagem {
-            state: RefCell::new(Rc::new(EstadoDoPersonagem::Small)),
-            previous_state: RefCell::new(Rc::new(EstadoDoPersonagem::Dead)),
+impl PlayerBuilder {
+    fn build() -> Result<Player, String> {
+        Ok(Player {
+            state: RefCell::new(Rc::new(PlayerState::Small)),
+            previous_state: RefCell::new(Rc::new(PlayerState::Dead)),
         })
     }
 }
 
-impl Personagem {
+impl Player {
     // fn set_state<T: 'static>(&self, new_state: T)
-    // where T: EstadoDoPersonagemTrait
-    fn set_state(&self, new_state: EstadoDoPersonagem)
+    // where T: PlayerStateTrait
+    fn set_state(&self, new_state: PlayerState)
     {
-        let old_rc: Rc<EstadoDoPersonagem> = self.state.replace(Rc::new(new_state));
+        let old_rc: Rc<PlayerState> =
+            self.state.replace(Rc::new(new_state));
         self.previous_state.replace(old_rc);
     }
 
-    fn extract_rc(&self) -> Rc<EstadoDoPersonagem> {
-        let celula: Ref<Rc<EstadoDoPersonagem>> = RefCell::borrow(&self.state);
-        let rc: Rc<EstadoDoPersonagem> = Rc::clone(&celula);
+    fn extract_rc(&self) -> Rc<PlayerState> {
+        let cell: Ref<Rc<PlayerState>> = RefCell::borrow(&self.state);
+        let rc: Rc<PlayerState> = Rc::clone(&cell);
         rc
     }
 
-    fn hit(&self) {
-        let new_state: EstadoDoPersonagem = self.extract_rc()
+    fn hit_player(&self) {
+        let new_state: PlayerState =
+            self.extract_rc()
             .hit();
 
         self.set_state(new_state);
     }
 
-    fn mushroom(&self) {
-        let new_state: EstadoDoPersonagem = self.extract_rc()
+    fn mushroom_player(&self) {
+        let new_state: PlayerState =
+            self.extract_rc()
             .mushroom();
 
         self.set_state(new_state);
     }
 
     fn star(&self) {
-        let new_state: EstadoDoPersonagem = self.extract_rc()
+        let new_state: PlayerState =
+            self.extract_rc()
             .star();
 
         self.set_state(new_state);
     }
 }
 
-/*#[derive(Copy, Clone, Debug)]
-enum EstadoDoPersonagem {
-    Small,
-    Large,
-    Invincible,
-}*/
-
-trait EstadoDoPersonagemTrait {
-    fn hit(&self) -> EstadoDoPersonagem;
-    fn mushroom(&self) -> EstadoDoPersonagem;
-    fn star(&self) -> EstadoDoPersonagem;
+trait PlayerStateTrait {
+    fn hit(&self) -> PlayerState;
+    fn mushroom(&self) -> PlayerState;
+    fn star(&self) -> PlayerState;
 }
 
 #[derive(Debug)]
-enum EstadoDoPersonagem {
+enum PlayerState {
     Dead,
     Small,
     Large,
     Star,
 }
 
-impl EstadoDoPersonagemTrait for EstadoDoPersonagem {
-    fn hit(&self) -> EstadoDoPersonagem {
+impl PlayerStateTrait for PlayerState {
+    fn hit(&self) -> PlayerState {
         match self {
-            EstadoDoPersonagem::Small => {
+            PlayerState::Small => {
                 println!("small was hit, died");
-                EstadoDoPersonagem::Dead
+                PlayerState::Dead
             }
-            EstadoDoPersonagem::Large => {
+            PlayerState::Large => {
                 println!("I was large -> small again");
-                EstadoDoPersonagem::Small
+                PlayerState::Small
             }
             _ => {
                 panic!("The dead don't need to change state")
@@ -96,15 +93,15 @@ impl EstadoDoPersonagemTrait for EstadoDoPersonagem {
         }
     }
 
-    fn mushroom(&self) -> EstadoDoPersonagem {
+    fn mushroom(&self) -> PlayerState {
         match self {
-            EstadoDoPersonagem::Small => {
+            PlayerState::Small => {
                 println!("small is growing");
-                EstadoDoPersonagem::Large
+                PlayerState::Large
             }
-            EstadoDoPersonagem::Large => {
+            PlayerState::Large => {
                 println!("Can't grow anymore");
-                EstadoDoPersonagem::Large
+                PlayerState::Large
             }
             _ => {
                 panic!("The dead don't need to change state")
@@ -112,15 +109,15 @@ impl EstadoDoPersonagemTrait for EstadoDoPersonagem {
         }
     }
 
-    fn star(&self) -> EstadoDoPersonagem {
+    fn star(&self) -> PlayerState {
         match self {
-            EstadoDoPersonagem::Small => {
+            PlayerState::Small => {
                 println!("small got star");
-                EstadoDoPersonagem::Star
+                PlayerState::Star
             }
-            EstadoDoPersonagem::Large => {
+            PlayerState::Large => {
                 println!("Large got star");
-                EstadoDoPersonagem::Star
+                PlayerState::Star
             }
             _ => {
                 panic!("The dead don't need star")
@@ -131,41 +128,41 @@ impl EstadoDoPersonagemTrait for EstadoDoPersonagem {
 
 fn main() {
     {
-        let mario = PersonagemBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().unwrap();
         println!("{:?}", mario.state.borrow());
-        mario.hit();
+        mario.hit_player();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
     {
-        let mario = PersonagemBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().unwrap();
         println!("{:?}", mario.state.borrow());
-        mario.mushroom();
+        mario.mushroom_player();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
     {
-        let mario = PersonagemBuilder::build().unwrap();
-        mario.set_state(EstadoDoPersonagem::Large);
+        let mario = PlayerBuilder::build().unwrap();
+        mario.set_state(PlayerState::Large);
         println!("{:?}", mario.state.borrow());
-        mario.hit();
+        mario.hit_player();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
     {
-        let mario = PersonagemBuilder::build().unwrap();
-        mario.set_state(EstadoDoPersonagem::Large);
+        let mario = PlayerBuilder::build().unwrap();
+        mario.set_state(PlayerState::Large);
         println!("{:?}", mario.state.borrow());
-        mario.mushroom();
+        mario.mushroom_player();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
         println!("----------------------")
     }
 
     {
-        let mario = PersonagemBuilder::build().unwrap();
+        let mario = PlayerBuilder::build().unwrap();
         println!("{:?}", mario.state.borrow());
         mario.star();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
@@ -173,8 +170,8 @@ fn main() {
     }
 
     {
-        let mario = PersonagemBuilder::build().unwrap();
-        mario.set_state(EstadoDoPersonagem::Large);
+        let mario = PlayerBuilder::build().unwrap();
+        mario.set_state(PlayerState::Large);
         println!("{:?}", mario.state.borrow());
         mario.star();
         println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
