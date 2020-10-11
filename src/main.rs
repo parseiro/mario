@@ -1,6 +1,6 @@
 // #![allow(dead_code)]
-// #![allow(unused_imports)]
-// #![allow(unused_variables)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
 #![warn(anonymous_parameters)]
 #![warn(box_pointers)]
 //#![warn(missing_docs)]
@@ -20,180 +20,279 @@ clippy::cast_precision_loss,clippy::cast_sign_loss,clippy::integer_arithmetic)]
 #![warn(clippy::unwrap_used,clippy::map_unwrap_or)]
 //#![warn(clippy::unwrap_in_result)]
 
-use std::cell::{Ref, RefCell};
-use std::rc::Rc;
-
-struct Player {
-    state: RefCell<Rc<PlayerState>>,
-    previous_state: RefCell<Rc<PlayerState>>,
-}
-
-struct PlayerBuilder {}
-
-impl PlayerBuilder {
-    fn build() -> Result<Player, String> {
-        Ok(Player {
-            state: RefCell::new(Rc::new(PlayerState::Small)),
-            previous_state: RefCell::new(Rc::new(PlayerState::Dead)),
-        })
-    }
-}
-
-impl Player {
-    // fn set_state<T: 'static>(&self, new_state: T)
-    // where T: PlayerStateTrait
-    fn set_state(&self, new_state: PlayerState)
-    {
-        let old_rc: Rc<PlayerState> =
-            self.state.replace(Rc::new(new_state));
-        let _ = self.previous_state.replace(old_rc);
-    }
-
-    fn extract_rc(&self) -> Rc<PlayerState> {
-        let cell: Ref<Rc<PlayerState>> = RefCell::borrow(&self.state);
-        let rc: Rc<PlayerState> = Rc::clone(&cell);
-        rc
-    }
-
-    fn hit_player(&self) {
-        let new_state: PlayerState =
-            self.extract_rc()
-            .hit();
-
-        self.set_state(new_state);
-    }
-
-    fn mushroom_player(&self) {
-        let new_state: PlayerState =
-            self.extract_rc()
-            .mushroom();
-
-        self.set_state(new_state);
-    }
-
-    fn star(&self) {
-        let new_state: PlayerState =
-            self.extract_rc()
-            .star();
-
-        self.set_state(new_state);
-    }
-}
-
-trait PlayerStateTrait {
-    fn hit(&self) -> PlayerState;
-    fn mushroom(&self) -> PlayerState;
-    fn star(&self) -> PlayerState;
-}
-
-#[derive(Debug)]
-enum PlayerState {
-    Dead,
-    Small,
-    Large,
-    Star,
-}
-
-impl PlayerStateTrait for PlayerState {
-    fn hit(&self) -> PlayerState {
-        match self {
-            PlayerState::Small => {
-                println!("small was hit, died");
-                PlayerState::Dead
-            }
-            PlayerState::Large => {
-                println!("I was large -> small again");
-                PlayerState::Small
-            }
-            _ => {
-                panic!("The dead don't need to change state")
-            }
-        }
-    }
-
-    fn mushroom(&self) -> PlayerState {
-        match self {
-            PlayerState::Small => {
-                println!("small is growing");
-                PlayerState::Large
-            }
-            PlayerState::Large => {
-                println!("Can't grow anymore");
-                PlayerState::Large
-            }
-            _ => {
-                panic!("The dead don't need to change state")
-            }
-        }
-    }
-
-    fn star(&self) -> PlayerState {
-        match self {
-            PlayerState::Small => {
-                println!("small got star");
-                PlayerState::Star
-            }
-            PlayerState::Large => {
-                println!("Large got star");
-                PlayerState::Star
-            }
-            _ => {
-                panic!("The dead don't need star")
-            }
-        }
-    }
-}
+use std::sync::{Arc, Weak};
+use std::cell::{RefCell};
+use std::borrow::BorrowMut;
+use std::fmt::{Display, Formatter};
+use std::fmt;
 
 fn main() {
-    {
-        let mario = PlayerBuilder::build().expect("Error creating a player");
-        println!("{:?}", mario.state.borrow());
-        mario.hit_player();
-        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
-        println!("----------------------")
+    // let arc_ventilador;
+
+
+    let mut fan = Arc::new(Fan::new());
+
+    let state = fan.current_state.borrow().upgrade().expect("Ué");
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request();
+
+    let state = fan.current_state.borrow().upgrade().expect("Ué");
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request();
+
+    let state = fan.current_state.borrow().upgrade().expect("Ué");
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request();
+
+    let state = fan.current_state.borrow().upgrade().expect("Ué");
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request();
+
+    let state = fan.current_state.borrow().upgrade().expect("Ué");
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request();
+
+
+
+
+
+
+
+    // arc_ventilador = arc.borrow_mut();
+
+
+    // let crone = arc_ventilador.clone();
+    // let state = FanOffState::new();
+    // let arc_state = Arc::new(state);
+    // arc_ventilador.fanOffState.set(Some(arc_state));
+}
+
+struct Fan {
+    fan_off_state: Arc<FanOffState>,
+    fan_low_state: Arc<FanLowState>,
+    fan_med_state: Arc<FanMedState>,
+    fan_high_state: Arc<FanHighState>,
+
+    current_state: RefCell<Weak<dyn FanState>>,
+}
+
+impl Fan {
+    fn new() -> Arc<Fan> {
+        let fan_off_state = Arc::from(FanOffState::new());
+        let fan_low_state = Arc::from(FanLowState::new());
+        let fan_med_state = Arc::from(FanMedState::new());
+        let fan_high_state = Arc::from(FanHighState::new());
+
+
+        let current_state = RefCell::new(Arc::downgrade(&fan_off_state));
+
+        let fan = Fan {
+            fan_off_state: fan_off_state.clone(),
+            fan_low_state: fan_low_state.clone(),
+            fan_med_state: fan_med_state.clone(),
+            fan_high_state: fan_high_state.clone(),
+            current_state: current_state.clone(),
+        };
+
+        let fan = Arc::from(fan);
+
+        fan_off_state.set_fan(fan.clone());
+        fan_low_state.set_fan(fan.clone());
+        fan_med_state.set_fan(fan.clone());
+        fan_high_state.set_fan(fan.clone());
+
+
+        // let a: Option<&mut FanOffState> = Arc::get_mut(&mut fan_off_state);
+        // let _b = a.expect("There must be something");
+
+        // .set_fan(arc_fan.clone());
+
+        fan
     }
 
-    {
-        let mario = PlayerBuilder::build().expect("Error creating a player");
-        println!("{:?}", mario.state.borrow());
-        mario.mushroom_player();
-        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
-        println!("----------------------")
+    fn set_current_state(&self, state: Weak<dyn FanState>) {
+        let _ = self.current_state.replace(state);
     }
 
-    {
-        let mario = PlayerBuilder::build().expect("Error creating a player");
-        mario.set_state(PlayerState::Large);
-        println!("{:?}", mario.state.borrow());
-        mario.hit_player();
-        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
-        println!("----------------------")
-    }
+    /*    fn getFanLowState(&self) -> Box<&dyn State> {
+            //return Box::new(&self.fanLowState);
+            return &self.fanOffState;
+        }*/
+}
 
-    {
-        let mario = PlayerBuilder::build().expect("Error creating a player");
-        mario.set_state(PlayerState::Large);
-        println!("{:?}", mario.state.borrow());
-        mario.mushroom_player();
-        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
-        println!("----------------------")
-    }
+trait FanState: Display {
+    fn handle_request(&self);
+    fn set_fan(&self, a: Arc<Fan>);
+}
 
-    {
-        let mario = PlayerBuilder::build().expect("Error creating a player");
-        println!("{:?}", mario.state.borrow());
-        mario.star();
-        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
-        println!("----------------------")
-    }
 
-    {
-        let mario = PlayerBuilder::build().expect("Error creating a player");
-        mario.set_state(PlayerState::Large);
-        println!("{:?}", mario.state.borrow());
-        mario.star();
-        println!("{:?} -> {:?}", mario.previous_state.borrow(), mario.state.borrow());
-        println!("----------------------")
+struct FanOffState {
+    fan: RefCell<Option<Weak<Fan>>>,
+}
+
+impl FanOffState {
+    fn new() -> Self {
+        FanOffState {
+            fan: RefCell::new(None),
+        }
     }
 }
 
+impl Display for FanOffState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "FanOffState")
+    }
+}
+
+impl FanState for FanOffState {
+    fn handle_request(&self) {
+        println!("Turning fan off to low");
+        let fan = self.fan
+            .borrow()
+            .as_ref()
+            .expect("Ué")
+            .upgrade()
+            .expect("Ué2");
+
+        let new_state = fan.fan_low_state.clone();
+        let new_state: Weak<_> = Arc::downgrade(&new_state);
+
+        fan.set_current_state(new_state);
+    }
+
+    fn set_fan(&self, arc: Arc<Fan>) {
+        let weak = Arc::downgrade(&arc);
+        let _ = self.fan.replace(Some(weak));
+    }
+}
+
+struct FanLowState {
+    fan: RefCell<Option<Weak<Fan>>>,
+}
+
+impl FanLowState {
+    fn new() -> Self {
+        FanLowState {
+            fan: RefCell::new(None),
+        }
+    }
+}
+
+impl Display for FanLowState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "FanLowState")
+    }
+}
+
+impl FanState for FanLowState {
+    fn handle_request(&self) {
+        println!("Turning fan low to med");
+        let fan = self.fan
+            .borrow()
+            .as_ref()
+            .expect("Ué")
+            .upgrade()
+            .expect("Ué2");
+
+        let new_state = fan.fan_med_state.clone();
+        let new_state: Weak<_> = Arc::downgrade(&new_state);
+
+        fan.set_current_state(new_state);
+
+    }
+
+    fn set_fan(&self, arc: Arc<Fan>) {
+        let weak = Arc::downgrade(&arc);
+        let _ = self.fan.replace(Some(weak));
+    }
+}
+
+struct FanMedState {
+    fan: RefCell<Option<Weak<Fan>>>,
+}
+
+impl FanMedState {
+    fn new() -> Self {
+        FanMedState {
+            fan: RefCell::new(None),
+        }
+    }
+}
+
+impl Display for FanMedState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "FanMedState")
+    }
+}
+
+impl FanState for FanMedState {
+    fn handle_request(&self) {
+        println!("Turning fan med to high");
+        let fan = self.fan
+            .borrow()
+            .as_ref()
+            .expect("Ué")
+            .upgrade()
+            .expect("Ué2");
+
+        let new_state = fan.fan_high_state.clone();
+        let new_state: Weak<_> = Arc::downgrade(&new_state);
+
+        fan.set_current_state(new_state);
+    }
+
+    fn set_fan(&self, arc: Arc<Fan>) {
+        let weak = Arc::downgrade(&arc);
+        let _ = self.fan.replace(Some(weak));
+    }
+}
+
+struct FanHighState {
+    fan: RefCell<Option<Weak<Fan>>>,
+}
+
+impl FanHighState {
+    fn new() -> Self {
+        FanHighState {
+            fan: RefCell::new(None),
+        }
+    }
+}
+
+impl Display for FanHighState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "FanHighState")
+    }
+}
+
+impl FanState for FanHighState {
+    fn handle_request(&self) {
+        println!("Turning fan high to off");
+        let fan = self.fan
+            .borrow()
+            .as_ref()
+            .expect("Ué")
+            .upgrade()
+            .expect("Ué2");
+
+        let new_state = fan.fan_off_state.clone();
+        let new_state: Weak<_> = Arc::downgrade(&new_state);
+
+        fan.set_current_state(new_state);
+    }
+
+    fn set_fan(&self, arc: Arc<Fan>) {
+        let weak = Arc::downgrade(&arc);
+        let _ = self.fan.replace(Some(weak));
+    }
+}
