@@ -1,3 +1,5 @@
+// #![no_std]
+
 // #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -6,7 +8,7 @@
 //#![warn(missing_docs)]
 #![warn(trivial_casts, trivial_numeric_casts)]
 #![warn(unused_results)]
-#![warn(unused_qualifications)]
+// #![warn(unused_qualifications)]
 #![warn(variant_size_differences)]
 #![warn(clippy::cast_possible_truncation,clippy::cast_possible_wrap,
 clippy::cast_precision_loss,clippy::cast_sign_loss,clippy::integer_arithmetic)]
@@ -20,47 +22,76 @@ clippy::cast_precision_loss,clippy::cast_sign_loss,clippy::integer_arithmetic)]
 #![warn(clippy::unwrap_used,clippy::map_unwrap_or)]
 //#![warn(clippy::unwrap_in_result)]
 
-use std::sync::{Arc, Weak};
-use std::cell::{RefCell};
-use std::borrow::BorrowMut;
-use std::fmt::{Display, Formatter};
-use std::fmt;
+extern crate alloc;
+
+/*#[macro_use]
+extern crate lazy_static;*/
+
+// use alloc::sync::{Arc, Weak};
+// use alloc::borrow::BorrowMut;
+use alloc::fmt::{Display, Formatter, Result};
+use alloc::fmt;
+use core::cell::RefCell;
+
+/*macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ({
+
+    })
+}*/
+
+// const FAN_OFF_STATE: FanOffState = FanOffState {};
+// const FAN_LOW_STATE: FanLowState = FanLowState {};
+// const FAN_MED_STATE: FanMedState = FanMedState {};
+// const FAN_HIGH_STATE: FanHighState = FanHighState {};
+
+
 
 fn main() {
-    // let arc_ventilador;
+    let fan_off_state = FanOffState {};
 
+    let mut fan: Fan = Fan {
+        //fan_off_state: FAN_OFF_STATE,
+        fan_off_state: fan_off_state.clone(),
+        // fan_low_state: FAN_LOW_STATE,
+        fan_low_state: FanLowState {},
+        // fan_med_state: FAN_MED_STATE,
+        fan_med_state: FanMedState {},
+        // fan_high_state: FAN_HIGH_STATE,
+        fan_high_state: FanHighState {},
+        current_state: RefCell::new(&fan_off_state),
+        // current_pointer: fan_off_state as *mut FanState,
+    };
 
-    let mut fan = Arc::new(Fan::new());
-
-    let state = fan.current_state.borrow().upgrade().expect("Ué");
-
-    println!("Estado atual: {}", state);
-
-    state.handle_request();
-
-    let state = fan.current_state.borrow().upgrade().expect("Ué");
-
-    println!("Estado atual: {}", state);
-
-    state.handle_request();
-
-    let state = fan.current_state.borrow().upgrade().expect("Ué");
+    let state = fan.current_state.borrow().clone();
 
     println!("Estado atual: {}", state);
 
-    state.handle_request();
+    state.handle_request(&mut fan);
 
-    let state = fan.current_state.borrow().upgrade().expect("Ué");
-
-    println!("Estado atual: {}", state);
-
-    state.handle_request();
-
-    let state = fan.current_state.borrow().upgrade().expect("Ué");
+    let state = fan.current_state.borrow().clone();
 
     println!("Estado atual: {}", state);
 
-    state.handle_request();
+    state.handle_request(&mut fan);
+
+    let state = fan.current_state.borrow().clone();
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request(&mut fan);
+
+    let state = fan.current_state.borrow().clone();
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request(&mut fan);
+
+    let state = fan.current_state.borrow().clone();
+
+    println!("Estado atual: {}", state);
+
+    state.handle_request(&mut fan);
 
 
 
@@ -77,76 +108,64 @@ fn main() {
     // arc_ventilador.fanOffState.set(Some(arc_state));
 }
 
-struct Fan {
-    fan_off_state: Arc<FanOffState>,
-    fan_low_state: Arc<FanLowState>,
-    fan_med_state: Arc<FanMedState>,
-    fan_high_state: Arc<FanHighState>,
+struct Fan<'a> {
+    fan_off_state: FanOffState,
+    fan_low_state: FanLowState,
+    fan_med_state: FanMedState,
+    fan_high_state: FanHighState,
 
-    current_state: RefCell<Weak<dyn FanState>>,
+    current_state: RefCell<&'a dyn FanState>,
+    // current_pointer: *mut dyn FanState,
 }
 
-impl Fan {
-    fn new() -> Arc<Fan> {
-        let fan_off_state = Arc::from(FanOffState::new());
-        let fan_low_state = Arc::from(FanLowState::new());
-        let fan_med_state = Arc::from(FanMedState::new());
-        let fan_high_state = Arc::from(FanHighState::new());
+impl<'a> Fan<'a> {
+    /*fn new() -> Fan {
+        let fan_off_state = FanOffState::new();
+        let fan_low_state = FanLowState::new();
+        let fan_med_state = FanMedState::new();
+        let fan_high_state = FanHighState::new();
 
 
-        let current_state = RefCell::new(Arc::downgrade(&fan_off_state));
+        let current_state = RefCell::new(&fan_off_state);
 
         let fan = Fan {
-            fan_off_state: fan_off_state.clone(),
-            fan_low_state: fan_low_state.clone(),
-            fan_med_state: fan_med_state.clone(),
-            fan_high_state: fan_high_state.clone(),
-            current_state: current_state.clone(),
+            fan_off_state: fan_off_state,
+            fan_low_state: fan_low_state,
+            fan_med_state: fan_med_state,
+            fan_high_state: fan_high_state,
+            current_state: current_state,
         };
 
-        let fan = Arc::from(fan);
-
-        fan_off_state.set_fan(fan.clone());
-        fan_low_state.set_fan(fan.clone());
-        fan_med_state.set_fan(fan.clone());
-        fan_high_state.set_fan(fan.clone());
-
-
-        // let a: Option<&mut FanOffState> = Arc::get_mut(&mut fan_off_state);
-        // let _b = a.expect("There must be something");
-
-        // .set_fan(arc_fan.clone());
+        // fan_off_state.set_fan(fan.clone());
+        // fan_low_state.set_fan(fan.clone());
+        // fan_med_state.set_fan(fan.clone());
+        // fan_high_state.set_fan(fan.clone());
 
         fan
-    }
+    }*/
 
-    fn set_current_state(&self, state: Weak<dyn FanState>) {
+    fn set_current_state(&self, state: &'a dyn FanState) {
         let _ = self.current_state.replace(state);
     }
-
-    /*    fn getFanLowState(&self) -> Box<&dyn State> {
-            //return Box::new(&self.fanLowState);
-            return &self.fanOffState;
-        }*/
 }
 
 trait FanState: Display {
-    fn handle_request(&self);
-    fn set_fan(&self, a: Arc<Fan>);
+    fn handle_request(&self, fan: &mut Fan);
+    // fn set_fan(&self, a: Fan);
 }
 
-
+#[derive(Clone,Copy)]
 struct FanOffState {
-    fan: RefCell<Option<Weak<Fan>>>,
+    // fan: RefCell<Option<Fan>>,
 }
 
-impl FanOffState {
+/*impl FanOffState {
     fn new() -> Self {
         FanOffState {
-            fan: RefCell::new(None),
+            // fan: RefCell::new(None),
         }
     }
-}
+}*/
 
 impl Display for FanOffState {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -155,37 +174,31 @@ impl Display for FanOffState {
 }
 
 impl FanState for FanOffState {
-    fn handle_request(&self) {
+    fn handle_request<'a>(&self, fan: &'a mut Fan) {
         println!("Turning fan off to low");
-        let fan = self.fan
-            .borrow()
-            .as_ref()
-            .expect("Ué")
-            .upgrade()
-            .expect("Ué2");
 
-        let new_state = fan.fan_low_state.clone();
-        let new_state: Weak<_> = Arc::downgrade(&new_state);
+        let state = fan.fan_low_state.clone();
 
-        fan.set_current_state(new_state);
+        fan.set_current_state(&state);
     }
 
-    fn set_fan(&self, arc: Arc<Fan>) {
+/*    fn set_fan(&self, arc: Arc<Fan>) {
         let weak = Arc::downgrade(&arc);
         let _ = self.fan.replace(Some(weak));
-    }
+    }*/
 }
 
+#[derive(Clone,Copy)]
 struct FanLowState {
-    fan: RefCell<Option<Weak<Fan>>>,
+    // fan: RefCell<Option<Weak<Fan>>>,
 }
 
 impl FanLowState {
-    fn new() -> Self {
+/*    fn new() -> Self {
         FanLowState {
-            fan: RefCell::new(None),
+            // fan: RefCell::new(None),
         }
-    }
+    }*/
 }
 
 impl Display for FanLowState {
@@ -195,38 +208,30 @@ impl Display for FanLowState {
 }
 
 impl FanState for FanLowState {
-    fn handle_request(&self) {
+    fn handle_request(&self, fan: &mut Fan) {
         println!("Turning fan low to med");
-        let fan = self.fan
-            .borrow()
-            .as_ref()
-            .expect("Ué")
-            .upgrade()
-            .expect("Ué2");
 
-        let new_state = fan.fan_med_state.clone();
-        let new_state: Weak<_> = Arc::downgrade(&new_state);
-
-        fan.set_current_state(new_state);
+        // fan.set_current_state(&FAN_MED_STATE);
 
     }
 
-    fn set_fan(&self, arc: Arc<Fan>) {
+/*    fn set_fan(&self, arc: Arc<Fan>) {
         let weak = Arc::downgrade(&arc);
         let _ = self.fan.replace(Some(weak));
-    }
+    }*/
 }
 
+#[derive(Clone,Copy)]
 struct FanMedState {
-    fan: RefCell<Option<Weak<Fan>>>,
+    // fan: RefCell<Option<Fan>>,
 }
 
 impl FanMedState {
-    fn new() -> Self {
+/*    fn new() -> Self {
         FanMedState {
-            fan: RefCell::new(None),
+            // fan: RefCell::new(None),
         }
-    }
+    }*/
 }
 
 impl Display for FanMedState {
@@ -236,37 +241,29 @@ impl Display for FanMedState {
 }
 
 impl FanState for FanMedState {
-    fn handle_request(&self) {
+    fn handle_request(&self, fan: &mut Fan) {
         println!("Turning fan med to high");
-        let fan = self.fan
-            .borrow()
-            .as_ref()
-            .expect("Ué")
-            .upgrade()
-            .expect("Ué2");
 
-        let new_state = fan.fan_high_state.clone();
-        let new_state: Weak<_> = Arc::downgrade(&new_state);
-
-        fan.set_current_state(new_state);
+        // fan.set_current_state(&FAN_HIGH_STATE);
     }
 
-    fn set_fan(&self, arc: Arc<Fan>) {
+/*    fn set_fan(&self, arc: Arc<Fan>) {
         let weak = Arc::downgrade(&arc);
         let _ = self.fan.replace(Some(weak));
-    }
+    }*/
 }
 
+#[derive(Clone,Copy)]
 struct FanHighState {
-    fan: RefCell<Option<Weak<Fan>>>,
+    // fan: RefCell<Option<Weak<Fan>>>,
 }
 
 impl FanHighState {
-    fn new() -> Self {
+/*    fn new() -> Self {
         FanHighState {
-            fan: RefCell::new(None),
+            // fan: RefCell::new(None),
         }
-    }
+    }*/
 }
 
 impl Display for FanHighState {
@@ -276,23 +273,15 @@ impl Display for FanHighState {
 }
 
 impl FanState for FanHighState {
-    fn handle_request(&self) {
+    fn handle_request(&self, fan: &mut Fan) {
         println!("Turning fan high to off");
-        let fan = self.fan
-            .borrow()
-            .as_ref()
-            .expect("Ué")
-            .upgrade()
-            .expect("Ué2");
 
-        let new_state = fan.fan_off_state.clone();
-        let new_state: Weak<_> = Arc::downgrade(&new_state);
-
-        fan.set_current_state(new_state);
+        fan.set_current_state(&fan.fan_off_state);
     }
 
-    fn set_fan(&self, arc: Arc<Fan>) {
+/*    fn set_fan(&self, arc: Arc<Fan>) {
         let weak = Arc::downgrade(&arc);
         let _ = self.fan.replace(Some(weak));
-    }
+    }*/
 }
+
